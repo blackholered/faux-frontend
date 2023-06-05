@@ -1,0 +1,28 @@
+<div class="container-md">
+  <div *ngIf="formError" class="alert alert-danger alert-cstm">
+    {{ formError }}
+  </div>
+  <div *ngIf="angForm.controls['name'].invalid && angForm.controls['name'].touched"
+       class="alert alert-danger alert-cstm">
+    The video name needs to have at least 5 characters up to 15 characters.
+  </div>
+  <div *ngIf="angForm.controls['description'].invalid && angForm.controls['description'].touched"
+       class="alert alert-danger alert-cstm">
+    Description can only have up to 128 characters.
+  </div>
+
+
+  <form [formGroup]="angForm">
+    <div class="form-group">
+      <label for="videoName">Video Name</label>
+      <input type="text" class="form-control" formControlName="name" id="videoName" aria-describedby="videoNameHelp" placeholder="Enter video name">
+      <small id="videoNameHelp" class="form-text text-muted">This will be the name displayed for the video</small>
+    </div>
+    <div class="form-group">
+      <label for="videoDescription">Video Description</label>
+      <textarea class="form-control" formControlName="description" id="videoDescription" rows="3"></textarea>
+    </div>
+    <p></p>
+    <a (click)="updateVideo()"  type="submit" class="btn btn-primary">Submit</a>
+  </form>
+</div>

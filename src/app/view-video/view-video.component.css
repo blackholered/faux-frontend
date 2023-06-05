@@ -1,0 +1,5 @@
+.embed-responsive, .video-js {
+  max-width: 1280px;
+  max-height: 720px;
+
+}

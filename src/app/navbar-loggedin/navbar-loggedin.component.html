@@ -1,0 +1,28 @@
+<header class="p-3 bg-dark text-white">
+  <div class="container">
+    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+      <a [routerLink]="['/home']"class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+        <h4>YouTube</h4>
+      </a>
+      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+        <li><a href="#" class="nav-link px-2 text-secondary"></a></li>
+      </ul>
+      <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+        <input type="search" class="form-control" placeholder="Search..." aria-label="Search" (keydown)="onKeydown($event)">
+      </form>
+      <div class="dropdown text-end">
+        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+          <img class="rounded-circle" src="assets/user.png" alt="mdo" width="32" height="32">
+        </a>
+        <ul class="dropdown-menu text-small">
+          <li><a class="dropdown-item disabled" href="#">{{username}}</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" [routerLink]="['/addvideo']">Upload Video</a></li>
+          <li><a class="dropdown-item" [routerLink]="['/myvideos']">Manage Videos</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item"(click)="signOut()">Sign out</a></li>      </ul>
+      </div>
+    </div>
+  </div>
+</header>
+<br>

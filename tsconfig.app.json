@@ -7,7 +7,10 @@
   },
   "files": [
     "src/main.ts",
-    "src/polyfills.ts"
+    "src/polyfills.ts",
+    "src/SuccessResponse.ts",
+    "src/LoginResponse.ts"
+
   ],
   "include": [
     "src/**/*.d.ts"

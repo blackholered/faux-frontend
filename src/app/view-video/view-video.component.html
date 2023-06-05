@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My YouTube Video</title>
+</head>
+<body>
+<style>
+  .card-title.right {
+    float: right;
+  }
+</style>
+<div class="container">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="embed-responsive embed-responsive-16by9">
+        <video id="HTML5Video" class="video-js" controls playsinline></video>
+
+
+      </div>
+      <h3 class="mt-3">{{this.video.name}}</h3>
+      <p>{{this.video.description}}</p>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      <h4>Comments</h4>
+      <div *ngIf="angForm.controls['commentBody'].invalid && angForm.controls['commentBody'].touched"
+           class="alert alert-danger alert-cstm">
+        Your comment needs to have from 15 to 1024 characters.
+      </div>
+      <form *ngIf="loggedIn" [formGroup]="angForm">
+        <div class="form-group">
+          <label for="comment-text">Leave a comment:</label>
+          <textarea formControlName="commentBody" class="form-control" id="comment-text" rows="3" placeholder="Enter your comment"></textarea>
+        </div>
+        <p></p>
+        <a (click)="addComment()" type="submit" class="btn btn-primary">Submit</a>
+      </form>
+<br>
+      <br>
+
+      <br>
+      <div id="comments-container">
+        <div class="card mb-3" *ngFor="let comment of comments">
+          <div class="card-body">
+            <h5 class="card-title">{{ comment.user.username }}</h5>
+            <p class="card-title right">{{ comment.datetime }}</p>
+            <p class="card-text">{{ comment.comment }}</p>
+          </div>
+        </div>
+        <div *ngIf="commentError">
+          <h3>There are no more comments</h3>
+        </div>
+      </div>
+
+
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+<div class="container d-flex justify-content-center align-items-center mb-4">
+  <div class="btn-group mr-3" role="group" aria-label="Pagination">
+    <button class="btn btn-secondary" (click)="previousPage()">Previous</button>
+    <button class="btn btn-secondary" (click)="nextPage()">Next</button>
+  </div>
+  <div class="dropdown ml-3">
+    <select class="custom-select" [(ngModel)]="limit" (ngModelChange)="getData()">
+      <option [value]="10">10</option>
+      <option [value]="20">20</option>
+      <option [value]="50">50</option>
+    </select>
+  </div>
+</div>
+
+<div class="container mb-4">
+  <div class="row">
+    <div class="col-md-4 mb-4" *ngFor="let video of videos">
+      <div class="card">
+        <a [routerLink]="['/view', video.id]" class="text-decoration-none text-reset">
+          <img class="card-img-top img-fluid" src="http://localhost:8080/videos/uploads/{{video.file}}.png" alt="{{video.name}}">
+        </a>
+        <div class="card-body">
+          <a [routerLink]="['/view', video.id]" class="text-decoration-none text-reset">
+            <h5 class="card-title" [style.max-width.px]="400" [style.overflow]="'hidden'" [style.text-overflow]="'ellipsis'" [style.white-space]="'nowrap'"><strong>{{video.name}}</strong></h5>
+          </a>
+          <a [routerLink]="['/view', video.id]" class="text-decoration-none text-reset">
+            <p class="card-text" [style.max-height.px]="50" [style.overflow]="'hidden'" [style.text-overflow]="'ellipsis'">{{video.description}}</p>
+          </a>
+        </div>
+      </div>
+
+
+      </div>
+    </div>
+  </div>
+
+
