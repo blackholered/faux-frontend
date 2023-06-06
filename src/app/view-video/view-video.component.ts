@@ -29,6 +29,12 @@ export class ViewVideoComponent implements OnInit, AfterViewInit, OnDestroy {
   angForm;
   loggedIn : boolean = false;
 
+  likeCount : number = 0;
+
+  hasLiked: boolean = false;
+
+   videoDTO;
+
   constructor(private webService: ApiService, private fb: FormBuilder,  private router: Router, private route: ActivatedRoute) {
     this.id = this.route.snapshot.params['id'];
     this.offset = 0;
@@ -37,6 +43,9 @@ export class ViewVideoComponent implements OnInit, AfterViewInit, OnDestroy {
       commentBody: ['', [Validators.required, Validators.minLength(15), Validators.maxLength(1024)]],
     });
     this.loggedIn = this.webService.getLoginStatus();
+    this.videoDTO = {
+      id: this.id,
+    };
 
   }
 
@@ -104,10 +113,80 @@ addComment() {
       });
   }
 
+  loadLikeCount() {
+    this.webService
+      .getLikeCountByVideoID(this.id)
+      .subscribe((result) => {
+        this.likeCount = Number(result.message);
+      });
+  }
+
+  loadHasLiked() {
+    if (this.webService.getLoginStatus()) {
+      const videoDTO = {
+        id: this.id,
+      };
+      this.webService.getHasLiked(videoDTO).subscribe(
+        hasLiked => {
+          if (hasLiked) {
+            this.hasLiked = true;
+          } else {
+            this.hasLiked = false;
+          }
+        },
+        error => {
+          this.hasLiked = false;
+        }
+      );
+    }
+  }
+
+  toggleLike() {
+    if (!this.webService.getLoginStatus()) {
+      alert("You need to login to be able to rate videos");
+    } else {
+      if (this.hasLiked) {
+        this.unlike();
+      } else {
+        this.like();
+      }
+    }
+  }
+
+  like() {
+    this.webService.sendLike(this.videoDTO).subscribe(
+      hasLiked => {
+        if (hasLiked) {
+          console.log("Liked video");
+          this.hasLiked = true;
+          this.likeCount++;
+        }
+      },
+      error => {
+        this.hasLiked = false;
+      }
+    );
+  }
+
+  unlike() {
+    this.webService.deleteLike(this.id).subscribe(
+      () => {
+        console.log("Unliked video");
+        this.hasLiked = false;
+        this.likeCount--;
+      },
+      error => {
+        this.hasLiked = true;
+      }
+    );
+  }
+
+
   ngOnInit() {
     this.loadCommentCount();
     this.loadComments();
-
+    this.loadLikeCount();
+    this.loadHasLiked();
     const container = document.querySelector('#comments-container') as HTMLElement;
 
     fromEvent(container, 'wheel')

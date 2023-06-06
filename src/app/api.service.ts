@@ -15,22 +15,18 @@ export class ApiService {
   private apiUrl = 'http://localhost:8080';  // URL to web api
 
 
-  httpOptionsNoAuth = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-    })
-  };
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + this.getToken()
     })
   };
+
   httpOptionsForm = {
     headers: new HttpHeaders({
       'Authorization': 'Bearer ' + this.getToken()
     })
   };
+
 
 
   @Output() changedLoginState: EventEmitter<any> = new EventEmitter();
@@ -55,6 +51,16 @@ export class ApiService {
   setToken(user: User, response: LoginResponse) {
     localStorage.setItem('token', String(response.token));
     localStorage.setItem('username', user.username);
+
+
+
+    this.httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + this.getToken()
+      })
+    };
+
     this.changedLoginState.emit(user);
   }
 
@@ -86,18 +92,18 @@ export class ApiService {
   }
 
   deleteVideo(id: number): Observable<void> {
+    const params = new HttpParams().set('id', id.toString());
+
     const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.getToken()
-      }),
-      params: new HttpParams().set('id', id.toString())
+      headers: this.httpOptions.headers,
+      params: params
     };
 
     return this.http.delete<void>(this.apiUrl + '/videos/delete', httpOptions).pipe(
-      catchError(this.handleError <void>('deleteVideo'))
+      catchError(this.handleError<void>('deleteVideo'))
     );
   }
+
 
 
   sendComment(commentDTO: any): Observable<boolean> {
@@ -106,15 +112,44 @@ export class ApiService {
     );
   }
 
+  sendLike(videoDTO: any): Observable<any> {
+    return this.http.post<any>(this.apiUrl + '/likes/add', videoDTO, this.httpOptions).pipe(
+      catchError(this.handleError<any>('sendLike'))
+    );
+  }
+
+  deleteLike(id: number): Observable<void> {
+    const params = new HttpParams().set('id', id.toString());
+
+    const httpOptions = {
+      headers: this.httpOptions.headers,
+      params: params
+    };
+
+    return this.http.delete<void>(this.apiUrl + '/likes/delete', httpOptions).pipe(
+      catchError(this.handleError<void>('deleteLike'))
+    );
+  }
+
+
+
+  getHasLiked(videoDTO: any): Observable<boolean> {
+    const url = `${this.apiUrl}/likes/hasUserLiked`;
+
+    const params = {
+      id: videoDTO.id
+    };
+
+
+    return this.http.get<boolean>(url, { params, headers: this.httpOptions.headers }).pipe(
+      catchError(this.handleError<boolean>('getHasLiked'))
+    );
+  }
+
 
   checkLoggedStatus(token: string): Observable<boolean> {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      })
-    };
-    return this.http.post<boolean>(this.apiUrl + '/auth/status', null, httpOptions).pipe(
+
+    return this.http.post<boolean>(this.apiUrl + '/auth/status', null, this.httpOptions).pipe(
       catchError(this.handleError<boolean>('checkLoggedStatus'))
     );
   }
@@ -127,7 +162,7 @@ export class ApiService {
       email: user.email,
       captchaKey: captchaKey
     };
-    return this.http.post<User>(this.apiUrl + '/auth/register', body, this.httpOptionsNoAuth).pipe(
+    return this.http.post<User>(this.apiUrl + '/auth/register', body, this.httpOptions).pipe(
       catchError(this.handleError <User>('addUser'))
     );
   }
@@ -164,6 +199,13 @@ export class ApiService {
     const params = new HttpParams().set('id', id.toString());
     return this.http.get<SuccessResponse>(this.apiUrl + '/comments/count', {params}).pipe(
       catchError(this.handleError <SuccessResponse>('getCommentCountByVideoID'))
+    );
+  }
+
+  getLikeCountByVideoID(id : number): Observable<SuccessResponse> {
+    const params = new HttpParams().set('id', id.toString());
+    return this.http.get<SuccessResponse>(this.apiUrl + '/likes/count', {params}).pipe(
+      catchError(this.handleError <SuccessResponse>('getLikeCountByVideoID'))
     );
   }
 

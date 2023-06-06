@@ -1,5 +1,51 @@
 .embed-responsive, .video-js {
   max-width: 1280px;
   max-height: 720px;
+}
 
+:root{
+  font-family: 'Roboto', sans-serif;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #909090;
+}
+
+.rate-icon {
+  margin-right: 5px;
+}
+
+svg{
+  fill: #909090;
+}
+
+.rate-icon{
+  width: 40px;
+  z-index: 1; /* Set a lower z-index to place the circle behind the icon */
+}
+
+.rate-icon.liked {
+  position: relative;
+}
+
+.rate-icon.liked::before {
+
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 48%;
+  transform: translate(-48%, -48%);
+  width: 123%;
+  height: 123%;
+  border: 2px solid #404040; /* Add a grey-black border */
+  background-color: #404040; /* Set the background color to grey-black */
+  border-radius: 50%; /* Make the shape a circle with border-radius */
+  opacity: 0.4; /* Set the opacity level for transparency */
+  z-index: 0; /* Set a lower z-index to place the circle behind the icon */
+}
+.rate-icon.liked svg {
+  fill: #000000; /* Change the color of the icon to black */
 }
